@@ -1,3 +1,6 @@
+
+⚠ VPN MUST ⚠
+
 📱Termux:
 
 git clone https://github.com/darkstarbdx/bcf_ddosv1 
