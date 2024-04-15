@@ -5,7 +5,7 @@ from colorama import init, Fore, Style
 import subprocess
 
 
-# ভালো কাজে ব্যাবহার কইরেন!!! আইপি এক্সপস হইলে আম্নে শেষ⚠
+# ভালো কাজে ব্যাবহার কইরেন!!! আইপি এক্সপস হইলে আপনি শেষ⚠
 # Define the list of packages to install
 packages = ["requests", "threading", "colorama"]
 
