@@ -1,5 +1,5 @@
 
-⚠ VPN MUST ⚠
+⚠ VPN MUST, Otherwise you will get CAUGHT! ⚠
 
 📱Termux:
 
