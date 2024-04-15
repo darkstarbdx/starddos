@@ -2,6 +2,14 @@ import requests
 import threading
 import time
 from colorama import init, Fore, Style
+import subprocess
+
+# Define the list of packages to install
+packages = ["requests", "threading", "colorama"]
+
+# Install the packages using pip
+for pkg in packages:
+    subprocess.run(["pip", "install", pkg])
 
 # Initialize colorama to support ANSI escape sequences on Windows
 init()
