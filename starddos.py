@@ -3,6 +3,8 @@ import threading
 import time
 from colorama import init, Fore, Style
 
+
+# ভালো কাজে ব্যাবহার কইরেন!!! আইপি এক্সপস হইলে আপনি শেষ⚠
 # Initialize colorama to support ANSI escape sequences on Windows
 init(autoreset=True)
 
